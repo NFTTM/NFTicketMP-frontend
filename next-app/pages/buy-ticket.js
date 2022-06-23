@@ -4,15 +4,14 @@ import { useRouter } from 'next/router'
 import Layout from 'components/Layout'
 import { Store } from "utils/Store";
 
-const Home = () => {
+const BuyTicket = () => {
   const router = useRouter()
   const { state, dispatch } = useContext(Store);
-  
+
   const onClickHandler = (event) => {
     router.push('/buy-ticket')
   }
-
-  return (
+    return (
     <Layout title="mytitle">
       <Box
         sx={{
@@ -35,7 +34,7 @@ const Home = () => {
           <Typography variant='h4' alignContent='center' textAlign='center'>Super Bowl!</Typography>
           <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>@ Glendale, Arizona</Typography>
           <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>February 12</Typography>
-
+          
           <Box textAlign='center' margin='3rem'>
             <Button variant="outlined" size="large" alignItems='center' justifyContent='center' onClick={onClickHandler}>
               Buy a Ticket!
@@ -48,4 +47,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default BuyTicket
