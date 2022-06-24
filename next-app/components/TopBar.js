@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal';
 import dynamic from 'next/dynamic';
 import { ethers } from 'ethers';
@@ -19,9 +21,11 @@ import { contractAddress, contractRead, defaultNetworkId, defaultProvider, goerl
 import abi from 'utils/contracts/abi.json';
 
 const pages = ['Buy Ticket', 'My Ticket', 'I am an organizer'];
+const pages_link = ['/buy-ticket', '/my-ticket', '/organizer']
 
 const ResponsiveAppBar = () => {
   const { state, dispatch } = useContext(Store);
+  const router = useRouter()
   const { walletConencted, correctNetworkConnected, account, provider, signer } = state;
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -33,6 +37,11 @@ const ResponsiveAppBar = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleRedirect = (i) => {
+    setAnchorElNav(null);
+    router.push(pages_link[i])
+  }
 
   // Web3 Integration
   const web3Modal = new Web3Modal({ network: 'mainnet', cacheProvider: true })
@@ -93,7 +102,7 @@ const ResponsiveAppBar = () => {
       return;
     }
   };
-  
+
   const connectWallet = async () => {
     try {
       await updateProvider();
@@ -192,9 +201,10 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+              {pages.map((page, i) => (
+                <MenuItem key={page} onClick={() => { handleRedirect(i) }}>
                   <Typography textAlign="center">{page}</Typography>
+
                 </MenuItem>
               ))}
             </Menu>
@@ -218,10 +228,10 @@ const ResponsiveAppBar = () => {
             NFTicket
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map((page, i) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => { handleRedirect(i) }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -232,7 +242,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {
               walletConencted ? (
-                <Button variant="contained"  onClick={disconnectWallet}>{account.substring(0,6) + '....' + account.slice(-4)}</Button>
+                <Button variant="contained" onClick={disconnectWallet}>{account.substring(0, 6) + '....' + account.slice(-4)}</Button>
               ) :
                 (<Button variant="contained" onClick={connectWallet}>Connect Wallet</Button>
                 )
