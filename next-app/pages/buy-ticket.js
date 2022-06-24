@@ -24,7 +24,7 @@ const BuyTicket = () => {
 
   const onClickHandler = (e) => {
     // console.log(e)
-    inputValidate()
+    const valid = inputValidate()
   }
 
   const inputValidate = () => {
