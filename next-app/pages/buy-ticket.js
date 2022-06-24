@@ -1,18 +1,54 @@
-import React, { useContext } from 'react'
-import { Typography, Box, Paper, Button } from '@mui/material';
+import React, { useContext, useState, useEffect } from 'react'
+import { Typography, Box, Paper, Button, TextField, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack';
 import Layout from 'components/Layout'
 import { Store } from "utils/Store";
 
 const BuyTicket = () => {
   const router = useRouter()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { state, dispatch } = useContext(Store);
 
-  const onClickHandler = (event) => {
-    router.push('/buy-ticket')
+  const [name, setName] = useState('')
+  const [id, setId] = useState('')
+  const [vipLevel, setVipLevel] = useState(1)
+
+  const onNameChangeHandler = (e) => {
+    setName(e.target.value)
   }
-    return (
-    <Layout title="mytitle">
+
+  const onIdChangeHandler = (e) => {
+    setId(e.target.value)
+  }
+
+  const onClickHandler = (e) => {
+    // console.log(e)
+    inputValidate()
+  }
+
+  const inputValidate = () => {
+    let allValid = true;
+    if (name.length === 0) {
+      allValid = false;
+      enqueueSnackbar('You must input name', {variant: 'error'})
+    }
+
+    if (id.length === 0) {
+      allValid = false;
+      enqueueSnackbar('You must input ID', {variant: 'error'})
+    }
+
+    if (![1,2,3].includes(vipLevel)) {
+      allValid = false;
+      enqueueSnackbar('Vip Level Wrong!', {variant: 'error'})
+    }
+    return allValid;
+  }
+
+
+  return (
+    <Layout title="Buy a Ticket">
       <Box
         sx={{
           marginTop: '1rem',
@@ -29,17 +65,54 @@ const BuyTicket = () => {
           },
         }}
       >
-        <Paper elevaion={3} alignItems='center' justifyContent='center'>
-          <Typography variant='h6' alignContent='center' textAlign='center' margin='2rem'>Coming Event</Typography>
-          <Typography variant='h4' alignContent='center' textAlign='center'>Super Bowl!</Typography>
-          <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>@ Glendale, Arizona</Typography>
-          <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>February 12</Typography>
-          
-          <Box textAlign='center' margin='3rem'>
-            <Button variant="outlined" size="large" alignItems='center' justifyContent='center' onClick={onClickHandler}>
-              Buy a Ticket!
-            </Button>
+        <Paper elevaion={3}>
+          <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem'>Buy a Ticket!</Typography>
+
+          <Box textAlign='center' margin='1rem'>
+            <div>
+              <TextField
+                id="name-field"
+                value={name}
+                label="Name"
+                variant="outlined"
+                onChange={onNameChangeHandler}
+                required
+                style={{ width: '200px', margin: '5px' }} />
+            </div>
+            <div>
+              <TextField
+                id="id-field"
+                value={id}
+                label="Passport ID"
+                variant="outlined"
+                onChange={onIdChangeHandler}
+                required
+                style={{ width: '200px', margin: '5px' }} />
+            </div>
+            <div>
+              <FormControl style={{ width: '200px' }}>
+                <InputLabel id="vip-simple-select-label">VIP Level</InputLabel>
+                <Select
+                  labelId="vip-simple-select-label"
+                  id="vip-simple-select"
+                  value={vipLevel}
+                  label="VIP Level"
+                  onChange={(e) => {setVipLevel(e.target.value)}}
+                >
+                  <MenuItem value={1}>VIP 1</MenuItem>
+                  <MenuItem value={2}>VIP 2</MenuItem>
+                  <MenuItem value={3}>VIP 3</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+
+              <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }}>
+                BUY!
+              </Button>
+            </div>
           </Box>
+
         </Paper>
       </Box>
 

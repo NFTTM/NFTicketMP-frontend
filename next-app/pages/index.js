@@ -30,14 +30,14 @@ const Home = () => {
           },
         }}
       >
-        <Paper elevaion={3} alignItems='center' justifyContent='center'>
+        <Paper elevaion={3}>
           <Typography variant='h6' alignContent='center' textAlign='center' margin='2rem'>Coming Event</Typography>
           <Typography variant='h4' alignContent='center' textAlign='center'>Super Bowl!</Typography>
           <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>@ Glendale, Arizona</Typography>
           <Typography variant='h6' sx={{ textAlign: 'center', fontSize: '1.2rem', margin: '0.25rem' }}>February 12</Typography>
 
           <Box textAlign='center' margin='3rem'>
-            <Button variant="outlined" size="large" alignItems='center' justifyContent='center' onClick={onClickHandler}>
+            <Button variant="outlined" size="large" onClick={onClickHandler}>
               Buy a Ticket!
             </Button>
           </Box>
