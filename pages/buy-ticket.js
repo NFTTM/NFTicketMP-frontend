@@ -9,10 +9,22 @@ const BuyTicket = () => {
   const router = useRouter()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { state, dispatch } = useContext(Store);
+  const { walletConencted, correctNetworkConnected, account, provider, signer } = state;
 
   const [name, setName] = useState('')
   const [id, setId] = useState('')
   const [vipLevel, setVipLevel] = useState(1)
+
+  // @DEBUG
+  useEffect(() => {
+    console.log(">>> debugging....")
+    console.log("walletConencted:", walletConencted)
+    console.log("correctNetworkConnected:", correctNetworkConnected)
+    console.log("account:", account)
+    console.log("provider:", provider)
+    console.log("signer:", signer)
+  }, [walletConencted, correctNetworkConnected, account, provider, signer])
+
 
   const onNameChangeHandler = (e) => {
     setName(e.target.value)
@@ -23,25 +35,44 @@ const BuyTicket = () => {
   }
 
   const onClickHandler = (e) => {
-    // console.log(e)
     const valid = inputValidate()
+    if (!valid) return;
+
+    // Check Wallet Connected
+    if (!walletConencted || !signer) {
+      enqueueSnackbar("You must login Metamask to continue", { variant: 'info' })
+      return
+    }
+
+    const signMsg = async () => {
+      // Sign a Message
+      const msg = {
+        name, id, event: 'superbowl'
+      }
+      const signedHash = await signer.signMessage(JSON.stringify(msg))
+      console.log("Signed Hash is:::", signedHash)
+    }
+
+    signMsg()
+
+
   }
 
   const inputValidate = () => {
     let allValid = true;
     if (name.length === 0) {
       allValid = false;
-      enqueueSnackbar('You must input name', {variant: 'error'})
+      enqueueSnackbar('You must input name', { variant: 'error' })
     }
 
     if (id.length === 0) {
       allValid = false;
-      enqueueSnackbar('You must input ID', {variant: 'error'})
+      enqueueSnackbar('You must input ID', { variant: 'error' })
     }
 
-    if (![1,2,3].includes(vipLevel)) {
+    if (![1, 2, 3].includes(vipLevel)) {
       allValid = false;
-      enqueueSnackbar('Vip Level Wrong!', {variant: 'error'})
+      enqueueSnackbar('Vip Level Wrong!', { variant: 'error' })
     }
     return allValid;
   }
@@ -97,7 +128,7 @@ const BuyTicket = () => {
                   id="vip-simple-select"
                   value={vipLevel}
                   label="VIP Level"
-                  onChange={(e) => {setVipLevel(e.target.value)}}
+                  onChange={(e) => { setVipLevel(e.target.value) }}
                 >
                   <MenuItem value={1}>VIP 1</MenuItem>
                   <MenuItem value={2}>VIP 2</MenuItem>

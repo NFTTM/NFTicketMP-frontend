@@ -1,16 +1,5 @@
-# NFTicketMP Frontend
+# Smart Contract
 
-The Frontend for N
+https://github.com/NFTTM/NFTicketMP-contracts
 
-## Features
-
-- Login with unstoppable
-https://docs.unstoppabledomains.com/login-with-unstoppable/login-integration-guides/login-client-configuration/
-
-
-
-- Login with web3-react
-  
-  https://medium.com/coinmonks/web3-react-connect-users-to-metamask-or-any-wallet-from-your-frontend-241fd538ed39
-  
-  https://github.com/NoahZinsmeister/web3-react/tree/main/packages/example-next
+https://goerli.etherscan.io/address/0x38e07a39846f535c641486eb2b22d45aad83e25f
