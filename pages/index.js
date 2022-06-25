@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import Layout from 'components/Layout'
 import { Store } from "utils/Store";
 import { defaultProvider, contractRead } from "utils/const"
+
 const Home = () => {
   const router = useRouter()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();

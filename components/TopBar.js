@@ -131,6 +131,9 @@ const ResponsiveAppBar = () => {
   useEffect(() => {
     // unlock wallet
     const init = async () => {
+      const _adminAddress = await contractRead.owner()
+      dispatch({ type: 'UPDATE_ADMIN_ADDRESS', payload: _adminAddress });
+
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       // connectWallet
       connectWallet();

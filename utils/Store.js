@@ -2,6 +2,7 @@ import { createContext, useReducer } from "react";
 export const Store = createContext();
 const initialState = {
   walletConencted: false,
+  adminAddress: '',
   correctNetworkConnected: false,
   account: '',
   provider: null,
@@ -10,6 +11,9 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case "UPDATE_ADMIN_ADDRESS": 
+      console.log("UPDATE_ADMIN_ADDRESS..", action.payload)
+      return { ...state, adminAddress: action.payload };
     case "UPDATE_WALLET_CONNECTED":
       console.log("UPDATE_WALLET_CONNECTED..", action.payload)
       return { ...state, walletConencted: action.payload };
