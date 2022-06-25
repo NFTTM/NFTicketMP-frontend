@@ -68,9 +68,10 @@ const ResponsiveAppBar = () => {
     for (let i = 0; i < size; i++) {
       const ticket = await contractRead.ticketCategoryArray(i);
       const categoryName = ethers.utils.parseBytes32String(ticket.categoryName)
-      const ticketPrice = ethers.utils.formatEther(ticket.ticketPrice)
-      const maxNoOfTickets = ticket.maxNoOfTickets.toNumber()
-      const numberOfTicketsBought = ticket.numberOfTicketsBought.toNumber()
+      const ticketDetails = await contractRead.ticketCategoryMapping(ticket.categoryName)
+      const ticketPrice = ethers.utils.formatEther(ticketDetails.ticketPrice)
+      const maxNoOfTickets = ticketDetails.maxNoOfTickets.toNumber()
+      const numberOfTicketsBought = ticketDetails.numberOfTicketsBought.toNumber()
       // console.log(categoryName, ticketPrice, maxNoOfTickets, numberOfTicketsBought)
       ticketCategories.push({ categoryName, ticketPrice, maxNoOfTickets, numberOfTicketsBought })
     }

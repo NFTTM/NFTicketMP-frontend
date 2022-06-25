@@ -7,7 +7,7 @@ const goerliRpcUrl = 'https://data-seed-prebsc-1-s1.binance.org:8545/';
 const defaultProvider = new ethers.providers.JsonRpcProvider(goerliRpcUrl);
 const defaultNetworkId = 97;
 
-const contractAddress = '0xEB1cE6C7Ec3E9b0f0AA715586d91F708e15e2Db9'
+const contractAddress = '0xC6A396196d76DbDe3cB77B053886Ee603e274318'
 const contractRead = new ethers.Contract(contractAddress, abi, defaultProvider)
 
 const goerliChainConfig = [
