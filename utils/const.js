@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import abi from 'utils/contracts/abi.json'
 
+const backendUrl = 'http://localhost:3000/'
 // RPC URL -- replaced with bsctestnet
 const goerliRpcUrl = 'https://data-seed-prebsc-1-s1.binance.org:8545/';
 const defaultProvider = new ethers.providers.JsonRpcProvider(goerliRpcUrl);
@@ -26,6 +27,7 @@ const goerliChainConfig = [
 
 
 export {
+  backendUrl,
   contractAddress,
   contractRead,
   goerliRpcUrl,

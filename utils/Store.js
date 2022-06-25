@@ -5,22 +5,26 @@ const initialState = {
   adminAddress: '',
   correctNetworkConnected: false,
   account: '',
+  ticketCategories: [],
   provider: null,
   signer: null,
 }
 
 function reducer(state, action) {
   switch (action.type) {
+    case "UPDATE_TICKET_CATEGORIES":
+      console.debug("UPDATE_TICKET_CATEGORIES..", action.payload)
+      return { ...state, ticketCategories: action.payload };
     case "UPDATE_ADMIN_ADDRESS": 
-      console.log("UPDATE_ADMIN_ADDRESS..", action.payload)
+      console.debug("UPDATE_ADMIN_ADDRESS..", action.payload)
       return { ...state, adminAddress: action.payload };
     case "UPDATE_WALLET_CONNECTED":
-      console.log("UPDATE_WALLET_CONNECTED..", action.payload)
+      console.debug("UPDATE_WALLET_CONNECTED..", action.payload)
       return { ...state, walletConencted: action.payload };
     case "UPDATE_CORRECT_NETWORK_CONNECTED":
       return { ...state, correctNetworkConnected: action.payload}
     case "UPDATE_ACCOUNT":
-      console.log("UPDATE_ACCOUNT..", action.payload)
+      console.debug("UPDATE_ACCOUNT..", action.payload)
       return { ...state, account: action.payload };
     case "UPDATE_PROVIDER":
       return { ...state, provider: action.payload };

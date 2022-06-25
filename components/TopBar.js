@@ -16,6 +16,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useSnackbar } from 'notistack';
 import { Store } from "utils/Store";
 import { contractAddress, contractRead, defaultNetworkId, defaultProvider, goerliChainConfig } from 'utils/const'
 import abi from 'utils/contracts/abi.json';
@@ -25,6 +26,8 @@ const pages_link = ['/buy-ticket', '/my-ticket', '/organizer']
 
 const ResponsiveAppBar = () => {
   const { state, dispatch } = useContext(Store);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const router = useRouter()
   const { walletConencted, correctNetworkConnected, account, provider, signer } = state;
 
@@ -53,6 +56,28 @@ const ResponsiveAppBar = () => {
     dispatch({ type: 'RESET_NETWORK' });
     console.log('STATE RESETTED ...');
   };
+
+  const updateAllTicketInfo = async () => {
+    let size = await contractRead.getTicketCategoryArraySize()
+    size = size.toNumber()
+    if (size === 0) {
+      enqueueSnackbar('Ticket Categories Not Set Yet!', { variant: 'error' })
+      return
+    }
+    let ticketCategories = []
+    for (let i = 0; i < size; i++) {
+      const ticket = await contractRead.ticketCategoryArray(i);
+      const categoryName = ethers.utils.parseBytes32String(ticket.categoryName)
+      const ticketPrice = ethers.utils.formatEther(ticket.ticketPrice)
+      const maxNoOfTickets = ticket.maxNoOfTickets.toNumber()
+      const numberOfTicketsBought = ticket.numberOfTicketsBought.toNumber()
+      // console.log(categoryName, ticketPrice, maxNoOfTickets, numberOfTicketsBought)
+      ticketCategories.push({ categoryName, ticketPrice, maxNoOfTickets, numberOfTicketsBought })
+    }
+    dispatch({ type: 'UPDATE_TICKET_CATEGORIES', payload: ticketCategories})
+  }
+
+
 
   const updateProvider = async () => {
     const connection = await web3Modal.connect();
@@ -131,6 +156,7 @@ const ResponsiveAppBar = () => {
   useEffect(() => {
     // unlock wallet
     const init = async () => {
+      await updateAllTicketInfo()
       const _adminAddress = await contractRead.owner()
       dispatch({ type: 'UPDATE_ADMIN_ADDRESS', payload: _adminAddress });
 
