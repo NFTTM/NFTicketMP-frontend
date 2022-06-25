@@ -17,20 +17,47 @@ const MyTicket = () => {
   const { walletConencted, correctNetworkConnected, account, provider, signer, ticketCategories } = state;
 
   const [ticketId, setTicketId] = useState(0)
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
 
   useEffect(() => {
     if (account.length === 0) return
     const getUserTicket = async () => {
       const _ticketId = await contractRead.buyerToTicket(account)
       setTicketId(_ticketId.toNumber())
+      // check checkIn status
+      const checkedInStatus = await contractRead.checkedIn(account)
+      setIsCheckedIn(checkedInStatus)
     }
+
+
     getUserTicket()
 
   }, [account])
 
   const onClickHandler = (e) => {
-    // check in event.
-    console.log(e)
+
+    const signMsg = async () => {
+      // Sign a Message
+      const msg = {
+        walletAddress: account,
+        requestCheckin: true
+      }
+      const msgString = JSON.stringify(msg)
+      const signedHashForCheckIn = await signer.signMessage(msgString)
+
+      const constructed = {
+        walletAddress: account,
+        signature: signedHashForCheckIn
+      }
+      const response = await axios.post(`${backendUrl}check-in`, constructed)
+      if (response.data === true) {
+        enqueueSnackbar('Signature verify successfully. Checking in now...', { variant: 'success' })
+        return true
+      }
+      enqueueSnackbar('Signature verify failed, Cannot check in!', { variant: 'error' })
+      return 
+    }
+    signMsg()
   }
 
 
@@ -61,12 +88,12 @@ const MyTicket = () => {
               )
               : (<>
                 {/* Get data from IPFS */}
-                <Typography alignContent='center' textAlign='center' marginTop='2rem'>TICKET IS HERE!!</Typography>
+                <Typography alignContent='center' textAlign='center' marginTop='2rem'>Ticket ID: {ticketId}</Typography>
 
                 <Box textAlign='center' margin='1rem'>
 
-                  <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }}>
-                    CHECK IN
+                  <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }} disabled={isCheckedIn}>
+                    {isCheckedIn ? 'ALREADY CHECKED_IN' : 'CHECK IN NOW'}
                   </Button>
                 </Box>
               </>

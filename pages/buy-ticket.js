@@ -69,8 +69,8 @@ const BuyTicket = () => {
     if (!isEnoughTickets) return;
 
     const mint = async () => {
-      // const isSignedSucceed = await signMsg()
-      // if (!isSignedSucceed) return;
+      const isSignedSucceed = await signMsg()
+      if (!isSignedSucceed) return;
       await mintTicket()
     }
     mint()
@@ -104,12 +104,12 @@ const BuyTicket = () => {
     }
     const response = await axios.post(`${backendUrl}ticket`, constructed)
     // console.log(response.data)
-    if (response.data === false) {
-      enqueueSnackbar('Signature not valid, Cannot buy ticket!', { variant: 'error' })
-      return false
+    if (response.data === true) {
+      enqueueSnackbar('Signature verified successfully. Going to Mint Ticket!', { variant: 'success' })
+      return true
     }
-    enqueueSnackbar('Signature successfully. Going to Mint Ticket!', { variant: 'success' })
-    return true
+    enqueueSnackbar('Signature verified failed!', { variant: 'error' })
+    return false
   }
 
 
