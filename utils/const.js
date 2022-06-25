@@ -1,23 +1,22 @@
 import { ethers } from "ethers";
 import abi from 'utils/contracts/abi.json'
 
-// RPC URL
-const goerliRpcUrl = 'https://goerli.infura.io/v3/61d668eca81642b89bedc402376a951a';
+// RPC URL -- replaced with bsctestnet
+const goerliRpcUrl = 'https://data-seed-prebsc-1-s1.binance.org:8545/';
 const defaultProvider = new ethers.providers.JsonRpcProvider(goerliRpcUrl);
-const defaultNetworkId = 5;
+const defaultNetworkId = 97;
 
-const contractAddress = '0x38e07a39846F535C641486Eb2B22d45AAD83E25f'
+const contractAddress = '0xEB1cE6C7Ec3E9b0f0AA715586d91F708e15e2Db9'
 const contractRead = new ethers.Contract(contractAddress, abi, defaultProvider)
-
 
 const goerliChainConfig = [
   {
-    chainId: '0x5',
+    chainId: '0x61',
     rpcUrls: [goerliRpcUrl,],
-    chainName: 'Goerli Testnet',
+    chainName: 'BSCTestnet Testnet',
     nativeCurrency: {
-      name: 'GETH',
-      symbol: 'ETH',
+      name: 'tBNB',
+      symbol: 'BNB',
       decimals: 18,
     },
     blockExplorerUrls: ['https://goerli.etherscan.io/'],
