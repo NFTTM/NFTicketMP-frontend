@@ -13,10 +13,44 @@ const Organizer = () => {
   const router = useRouter()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { state, dispatch } = useContext(Store);
-  const { walletConencted, correctNetworkConnected, account, provider, signer, ticketCategories, adminAddress } = state;
+  const { adminAddress, walletConencted, correctNetworkConnected, account, provider, signer, ticketCategories } = state;
 
   const [loaded, setLoaded] = useState(false);
   const [adminConnected, setAdminConnected] = useState(false);
+  // SET UP NEW TICKET
+  const [newName, setNewName] = useState('')
+  const [newTicketPrice, setNetTicketPrice] = useState('')
+  const [newMaxNumOfTicket, setNewMaxNumOfTicket] = useState(0)
+
+  const onNameChangeHandler = (e) => {
+    setNewName(e.target.value)
+  }
+
+  const onTicketPriceChangeHandler = (e) => {
+    setNetTicketPrice(e.target.value)
+  }
+
+  const onMaxNumTicketChangeHandler = (e) => {
+    setNewMaxNumOfTicket(e.target.value)
+  }
+
+  const onCreateTicketHandler = (e) => {
+    const create = async () => {
+      try {
+        const _name = ethers.utils.formatBytes32String(newName)
+        const _price = ethers.utils.parseEther(newTicketPrice)
+        const _maxNumber = parseInt(newMaxNumOfTicket)
+        const contractWrite = new ethers.Contract(contractAddress, abi, signer)
+        await contractWrite.setUpTicket(_name, _price, _maxNumber, 0)
+        enqueueSnackbar("Ticket Creation Submitted", { variant: "info" })
+      }
+      catch (error) {
+        enqueueSnackbar("Create Ticket Error:", error)
+      }
+    }
+    create()
+  }
+
 
   useEffect(() => {
     if (adminAddress.length === 0 || account.length == 0) {
@@ -24,10 +58,11 @@ const Organizer = () => {
       setAdminConnected(false)
     }
     if (adminAddress === account) {
-      enqueueSnackbar('Welcome to the admin dashboard', {variant: 'success'})
+      closeSnackbar()
+      enqueueSnackbar('Welcome to the admin dashboard', { variant: 'success' })
       setAdminConnected(true)
     } else {
-      enqueueSnackbar('Sorry, you are not admin of the contract', {variant: 'error'})
+      enqueueSnackbar('Sorry, you are not admin of the contract', { variant: 'error' })
       setAdminConnected(false)
     }
   }, [account, adminAddress])
@@ -35,11 +70,94 @@ const Organizer = () => {
   return (
     <Layout title="Organizer">
       {
-        adminConnected && loaded ? <>
-          <Typography>Welcome to use Admin panel</Typography>
-        </> : <>
-        <Typography>You must connect with Admin Account to use the panel.</Typography>
+        adminConnected ? <>
+          <Box textAlign='center' margin='1rem'>
+            <Typography>Welcome to use Admin panel</Typography>
+          </Box>
+          <Box
+            sx={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
+              '& > :not(style)': {
+                m: 1,
+                maxWidth: '80vw',
+                maxHeight: '80vh',
+                height: 250,
+                width: 250,
+              },
+            }}
+          >
+            {
+              ticketCategories.map((item, i) => (
 
+                <Paper elevaion={3}>
+                  <Box textAlign='center' margin='0.5rem'>
+                    <Typography variant='h6' alignContent='center' textAlign='center' margin='2rem'>Ticket {item.categoryName}</Typography>
+                    {/* <Typography variant='subtitle2'>{item.categoryName}</Typography> */}
+                    <Typography>Price: {item.ticketPrice} ETH</Typography>
+                    <Typography>Max Num: {item.maxNoOfTickets}</Typography>
+                    <Typography>Sold: {item.numberOfTicketsBought}</Typography>
+                  </Box>
+                </Paper>
+
+              ))
+            }
+
+
+            <Paper elevaion={3}>
+              <Box textAlign='center' margin='1rem'>
+                <Typography variant='h6' alignContent='center' textAlign='center' margin='0.5rem'>New Ticket</Typography>
+                <div style={{ margin: '0.2rem' }}>
+                  <TextField
+                    id="id-field"
+                    size="small"
+                    value={newName}
+                    label="Ticket Name"
+                    variant="outlined"
+                    onChange={onNameChangeHandler}
+                    required
+                  />
+                </div>
+                <div style={{ margin: '0.2rem' }}>
+                  <TextField
+                    id="price-field"
+                    size="small"
+                    value={newTicketPrice}
+                    label="Price"
+                    variant="outlined"
+                    onChange={onTicketPriceChangeHandler}
+                    required
+                  />
+                </div>
+                <div style={{ margin: '0.2rem' }}>
+
+                  <TextField
+                    id="max-num-field"
+                    size="small"
+                    value={newMaxNumOfTicket}
+                    label="Max Supply"
+                    variant="outlined"
+                    onChange={onMaxNumTicketChangeHandler}
+                    required
+                  />
+                </div>
+                <div style={{ margin: '0.2rem' }}>
+                  <Button size="small" onClick={onCreateTicketHandler}>CREATE NEW TICKET</Button>
+                </div>
+              </Box>
+            </Paper>
+
+          </Box>
+
+
+
+
+
+        </> : <>
+          <Typography>You must connect with Admin Account to use the panel.</Typography>
         </>
       }
 

@@ -154,7 +154,7 @@ const BuyTicket = () => {
             m: 1,
             maxWidth: '80vw',
             maxHeight: '80vh',
-            height: 400,
+            height: 500,
             width: 400,
           },
         }}
