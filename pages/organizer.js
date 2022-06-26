@@ -62,6 +62,7 @@ const Organizer = () => {
       enqueueSnackbar('Welcome to the admin dashboard', { variant: 'success' })
       setAdminConnected(true)
     } else {
+      closeSnackbar()
       enqueueSnackbar('Sorry, you are not admin of the contract', { variant: 'error' })
       setAdminConnected(false)
     }
@@ -70,7 +71,7 @@ const Organizer = () => {
   return (
     <Layout title="Organizer">
       {
-        adminConnected ? <>
+        walletConencted && adminConnected ? <>
           <Box textAlign='center' margin='1rem'>
             <Typography>Welcome to use Admin panel</Typography>
           </Box>
@@ -157,7 +158,9 @@ const Organizer = () => {
 
 
         </> : <>
-          <Typography>You must connect with Admin Account to use the panel.</Typography>
+          <Box textAlign='center' margin='1rem'>
+            <Typography>You must login with Admin Account</Typography>
+          </Box>
         </>
       }
 

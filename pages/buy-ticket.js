@@ -30,11 +30,11 @@ const BuyTicket = () => {
   }, [account])
 
   // Listen to event
-  useEffect(()=> {
+  useEffect(() => {
     contractRead.on('BuyTicket', (_buyer, _ticketCategory) => {
       if (_buyer === account) {
         const userTicketCategory = ethers.utils.parseBytes32String(_ticketCategory)
-        enqueueSnackbar(`You bought a ${userTicketCategory} ticket`, {variant: 'success'})
+        enqueueSnackbar(`You bought a ${userTicketCategory} ticket`, { variant: 'success' })
       }
     })
 
@@ -42,7 +42,7 @@ const BuyTicket = () => {
       if (_to === account) {
         // @TODO. IPFS
         // await axios.get('')
-        }
+      }
     })
   }, [])
 
@@ -117,9 +117,9 @@ const BuyTicket = () => {
     const contractWrite = new ethers.Contract(contractAddress, abi, signer)
     const ticketSelected = ticketCategories.filter(ticket => ticket.categoryName == vipLevel)[0]
     console.log("ticketSelected:: ", ticketSelected)
-    const _ticketType =  ethers.utils.formatBytes32String(vipLevel)
-    const _price = ethers.utils.parseEther( ticketSelected.ticketPrice)
-    await contractWrite.buyTicket(_ticketType, {value: _price})
+    const _ticketType = ethers.utils.formatBytes32String(vipLevel)
+    const _price = ethers.utils.parseEther(ticketSelected.ticketPrice)
+    await contractWrite.buyTicket(_ticketType, { value: _price })
   }
 
   const inputValidate = () => {
@@ -162,53 +162,61 @@ const BuyTicket = () => {
         <Paper elevaion={3}>
           <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem'>Buy a Ticket!</Typography>
 
-          <Box textAlign='center' margin='1rem'>
-            <div>
-              <TextField
-                id="name-field"
-                value={name}
-                label="Name"
-                variant="outlined"
-                onChange={onNameChangeHandler}
-                required
-                style={{ width: '200px', margin: '5px' }} />
-            </div>
-            <div>
-              <TextField
-                id="id-field"
-                value={id}
-                label="Passport ID"
-                variant="outlined"
-                onChange={onIdChangeHandler}
-                required
-                style={{ width: '200px', margin: '5px' }} />
-            </div>
-            <div>
-              <FormControl style={{ width: '200px' }}>
-                <InputLabel id="vip-simple-select-label">VIP Level</InputLabel>
-                <Select
-                  labelId="vip-simple-select-label"
-                  id="vip-simple-select"
-                  value={vipLevel}
-                  label="VIP Level"
-                  onChange={(e) => { setVipLevel(e.target.value) }}
-                >
-                  {
-                    ticketCategories.map((item, i) => (
-                      <MenuItem value={item.categoryName}>{item.categoryName}</MenuItem>
-                    ))
-                  }
-                </Select>
-              </FormControl>
-            </div>
-            <div>
+          {
+            walletConencted ? (<Box textAlign='center' margin='1rem'>
+              <div>
+                <TextField
+                  id="name-field"
+                  value={name}
+                  label="Name"
+                  variant="outlined"
+                  onChange={onNameChangeHandler}
+                  required
+                  style={{ width: '200px', margin: '5px' }} />
+              </div>
+              <div>
+                <TextField
+                  id="id-field"
+                  value={id}
+                  label="Passport ID"
+                  variant="outlined"
+                  onChange={onIdChangeHandler}
+                  required
+                  style={{ width: '200px', margin: '5px' }} />
+              </div>
+              <div>
+                <FormControl style={{ width: '200px' }}>
+                  <InputLabel id="vip-simple-select-label">VIP Level</InputLabel>
+                  <Select
+                    labelId="vip-simple-select-label"
+                    id="vip-simple-select"
+                    value={vipLevel}
+                    label="VIP Level"
+                    onChange={(e) => { setVipLevel(e.target.value) }}
+                  >
+                    {
+                      ticketCategories.map((item, i) => (
+                        <MenuItem value={item.categoryName}>{item.categoryName}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
+              </div>
+              <div>
 
-              <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }} disabled={isBought}>
-                {isBought ? 'ALREADY BOUGHT' : 'BUY!'}
-              </Button>
+                <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }} disabled={isBought}>
+                  {isBought ? 'ALREADY BOUGHT' : 'BUY!'}
+                </Button>
 
-            </div>
-          </Box>
+              </div>
+            </Box>) :
+              (
+                <Box textAlign='center' margin='1rem'>
+                  <Typography variant='h7' alignContent='center' textAlign='center' marginTop='2rem'>Please Connect the Wallet</Typography>
+                </Box>
+              )
+          }
+
 
         </Paper>
 

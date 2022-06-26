@@ -22,7 +22,7 @@ export default function MyApp(props) {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <StoreProvider>
-          <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+          <SnackbarProvider maxSnack={1} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
             <CssBaseline />
             <Component {...pageProps} />
           </SnackbarProvider>

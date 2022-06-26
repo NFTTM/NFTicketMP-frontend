@@ -18,15 +18,17 @@ const MyTicket = () => {
 
   const [ticketId, setTicketId] = useState(0)
   const [isCheckedIn, setIsCheckedIn] = useState(false);
-
+  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     if (account.length === 0) return
     const getUserTicket = async () => {
+      setLoaded(false)
       const _ticketId = await contractRead.buyerToTicket(account)
       setTicketId(_ticketId.toNumber())
       // check checkIn status
       const checkedInStatus = await contractRead.checkedIn(account)
       setIsCheckedIn(checkedInStatus)
+      setLoaded(true)
     }
 
 
@@ -55,7 +57,7 @@ const MyTicket = () => {
         return true
       }
       enqueueSnackbar('Signature verify failed, Cannot check in!', { variant: 'error' })
-      return 
+      return false
     }
     signMsg()
   }
@@ -79,29 +81,37 @@ const MyTicket = () => {
           },
         }}
       >
-        <Paper elevaion={3}>
-          <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem'>My Ticket</Typography>
-          {
-            ticketId === 0 ?
-              (
-                <Typography alignContent='center' textAlign='center' marginTop='2rem'>You have not bought ticket yet!</Typography>
-              )
-              : (<>
-                {/* Get data from IPFS */}
-                <Typography alignContent='center' textAlign='center' marginTop='2rem'>Ticket ID: {ticketId}</Typography>
+        {
+          walletConencted && loaded ? (
+            <Paper elevaion={3}>
+              <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem'>My Ticket</Typography>
+              {
+                ticketId === 0 ?
+                  (
+                    <Typography alignContent='center' textAlign='center' marginTop='2rem'>You have not bought ticket yet!</Typography>
+                  )
+                  : (<>
+                    {/* Get data from IPFS */}
+                    <Typography alignContent='center' textAlign='center' marginTop='2rem'>Ticket ID: {ticketId}</Typography>
 
-                <Box textAlign='center' margin='1rem'>
+                    <Box textAlign='center' margin='1rem'>
 
-                  <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }} disabled={isCheckedIn}>
-                    {isCheckedIn ? 'ALREADY CHECKED_IN' : 'CHECK IN NOW'}
-                  </Button>
-                </Box>
-              </>
-              )
-          }
+                      <Button variant="outlined" size="large" onClick={onClickHandler} style={{ marginTop: '1rem' }} disabled={isCheckedIn}>
+                        {isCheckedIn ? 'ALREADY CHECKED_IN' : 'CHECK IN NOW'}
+                      </Button>
+                    </Box>
+                  </>
+                  )
+              }
+            </Paper>
+          ) : (
+            <Paper elevaion={3}>
+              <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem'>My Ticket</Typography>
+              <Typography variant='h6' alignContent='center' textAlign='center' marginTop='2rem' style={{fontSize: '1rem'}}>Please Connect the Wallet</Typography>
+            </Paper>
+          )
+        }
 
-
-        </Paper>
 
 
       </Box>
