@@ -22,10 +22,6 @@ const BuyTicket = () => {
 
   useEffect(() => {
     if (account.length === 0) return
-    const checkBought = async () => {
-      const _isBought = await contractRead.hasBoughtTicket(account)
-      setIsBought(_isBought)
-    }
     checkBought()
   }, [account])
 
@@ -34,14 +30,17 @@ const BuyTicket = () => {
     contractRead.on('BuyTicket', (_buyer, _ticketCategory) => {
       if (_buyer === account) {
         const userTicketCategory = ethers.utils.parseBytes32String(_ticketCategory)
-        enqueueSnackbar(`You bought a ${userTicketCategory} ticket`, { variant: 'success' })
-      }
-    })
+        enqueueSnackbar(`You bought a ${userTicketCategory} ticket, Waiting for Ticket Data...`, { variant: 'success' })
 
-    contractRead.on('Transfer', (_from, _to, _tokenId) => {
-      if (_to === account) {
-        // @TODO. IPFS
-        // await axios.get('')
+        // ASK the backend to submit data to IPFS
+        const requestTicketInfo = async() => {
+          const passportId = id;
+          const _response = await axios.get(`${backendUrl}ticket/${passportId}`)
+          const _data = _response.data
+          console.log("requestTicketInfo Data: ", _data);
+          checkBought()
+        } 
+        requestTicketInfo()
       }
     })
   }, [])
@@ -70,10 +69,16 @@ const BuyTicket = () => {
 
     const mint = async () => {
       const isSignedSucceed = await signMsg()
+      console.log("isSignedSucceed:: ", isSignedSucceed)
       if (!isSignedSucceed) return;
       await mintTicket()
     }
     mint()
+  }
+
+  const checkBought = async () => {
+    const _isBought = await contractRead.hasBoughtTicket(account)
+    setIsBought(_isBought)
   }
 
   const checkEnoughTicket = (ticketType) => {
@@ -94,16 +99,17 @@ const BuyTicket = () => {
     }
     const msgString = JSON.stringify(msg)
     const signedHash = await signer.signMessage(msgString)
-
+    console.log("signedHash:", signedHash)
     const constructed = {
       address: account,
       name: name,
       id: id,
       ticketType: vipLevel,
-      signature: signedHash
+      buySignature: signedHash
     }
     const response = await axios.post(`${backendUrl}ticket`, constructed)
-    // console.log(response.data)
+    console.log(response.data)
+
     if (response.data === true) {
       enqueueSnackbar('Signature verified successfully. Going to Mint Ticket!', { variant: 'success' })
       return true

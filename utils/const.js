@@ -24,6 +24,7 @@ const goerliChainConfig = [
   },
 ]
 
+const ipfsEndpoint = 'https://api.ipfsbrowser.com/ipfs/get.php?hash='
 
 
 export {
@@ -33,5 +34,6 @@ export {
   goerliRpcUrl,
   defaultProvider,
   defaultNetworkId,
-  goerliChainConfig
+  goerliChainConfig,
+  ipfsEndpoint
 }
