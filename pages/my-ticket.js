@@ -39,7 +39,7 @@ const MyTicket = () => {
       // Compatible issue
 
       try {
-        const allTickets = await axios.get(`${backendUrl}ticket/`)
+        const allTickets = await axios.get(`${backendUrl}ticket/${account}`)
         const _allTickets = Object.entries(allTickets.data)
         console.log("all tickets:: ", _allTickets)
         const myTicketArr = _allTickets.filter(item => item?.[1]?.ticketdata?.address === account)
@@ -92,8 +92,8 @@ const MyTicket = () => {
       }
       enqueueSnackbar('Signature verify failed, Cannot check in!', { variant: 'error' })
       return false
-  }
-   
+    }
+
     signMsgAndCheckin()
   }
 
@@ -127,12 +127,14 @@ const MyTicket = () => {
                   )
                   : (<>
                     <></>
-                    <Image
-                      src={`${ipfsEndpoint}${imageUri}`}
-                      alt="Ticket"
-                      width={500}
-                      height={150}
-                    />
+                    {
+                      imageUri.length > 0 && <Image
+                        src={`${ipfsEndpoint}${imageUri}`}
+                        alt="Ticket"
+                        width={500}
+                        height={150}
+                      />
+                    }
 
 
                     <Typography alignContent='center' textAlign='center' marginTop='1rem'>Name ID: {name}</Typography>

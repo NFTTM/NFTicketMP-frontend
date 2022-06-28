@@ -34,8 +34,7 @@ const BuyTicket = () => {
 
         // ASK the backend to submit data to IPFS
         const requestTicketInfo = async() => {
-          const passportId = id;
-          const _response = await axios.get(`${backendUrl}ticket/${passportId}`)
+          const _response = await axios.get(`${backendUrl}ticket/${account}`)
           const _data = _response.data
           console.log("requestTicketInfo Data: ", _data);
           checkBought()
@@ -107,6 +106,7 @@ const BuyTicket = () => {
       ticketType: vipLevel,
       buySignature: signedHash
     }
+    console.log("constructed:", constructed)
     const response = await axios.post(`${backendUrl}ticket`, constructed)
     console.log(response.data)
 
