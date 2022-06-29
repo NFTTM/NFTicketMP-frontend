@@ -41,11 +41,11 @@ const MyTicket = () => {
       try {
         const response = await axios.get(`${backendUrl}ticket/${account}`)
         console.log('responsedata::', response.data)
-        const myTicket = response.data.ticketJsonObj
+        const myTicket = response.data.ticketIpfsObj
         const _name = myTicket.name
         const _vipLevel = myTicket.ticketType
         const _passportId = myTicket.id
-        const imageIpfsUri = myTicket.imageUri
+        const imageIpfsUri = response.data.ticketIpfsURI
         console.log("imageIpfsUri:", imageIpfsUri)
         setName(_name)
         setVipLevel(_vipLevel)
@@ -122,7 +122,7 @@ const MyTicket = () => {
                     <></>
                     {
                       imageUri.length > 0 && <Image
-                        src={`${ipfsEndpoint}${imageUri}`}
+                        src={`${ipfsEndpoint}${imageUri}/ticket.png`}
                         alt="Ticket"
                         width={500}
                         height={150}
