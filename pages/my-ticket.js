@@ -39,24 +39,17 @@ const MyTicket = () => {
       // Compatible issue
 
       try {
-        const allTickets = await axios.get(`${backendUrl}ticket/${account}`)
-        const _allTickets = Object.entries(allTickets.data)
-        console.log("all tickets:: ", _allTickets)
-        const myTicketArr = _allTickets.filter(item => item?.[1]?.ticketdata?.address === account)
-        console.log("myTicketArr: ", myTicketArr)
-        if (myTicketArr.length === 0) return
-        const myTicket = myTicketArr[0]
-        const _name = myTicket[1].ticketdata.name
-        const _vipLevel = myTicket[1].ticketdata.ticketType
-        const _passportId = myTicket[1].ticketdata.id
-
+        const response = await axios.get(`${backendUrl}ticket/${account}`)
+        console.log('responsedata::', response.data)
+        const myTicket = response.data.ticketJsonObj
+        const _name = myTicket.name
+        const _vipLevel = myTicket.ticketType
+        const _passportId = myTicket.id
+        const imageIpfsUri = myTicket.imageUri
+        console.log("imageIpfsUri:", imageIpfsUri)
         setName(_name)
         setVipLevel(_vipLevel)
         setPassportId(_passportId)
-        const responseDataIpfsHash = await axios.get(`${backendUrl}ticket/${_passportId}`)
-        const ipfsData = responseDataIpfsHash.data
-        console.log("ipfsData:", ipfsData)
-        const imageIpfsUri = myTicket[1].imageIpfs.path
         setImageUri(imageIpfsUri)
         console.log("imageIpfsUri", imageIpfsUri)
         enqueueSnackbar("Fetch Ticket Info Success", { variant: 'success' })

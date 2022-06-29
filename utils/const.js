@@ -24,7 +24,7 @@ const goerliChainConfig = [
   },
 ]
 
-const ipfsEndpoint = 'https://api.ipfsbrowser.com/ipfs/get.php?hash='
+const ipfsEndpoint = 'https://gateway.pinata.cloud/ipfs/'
 
 
 export {

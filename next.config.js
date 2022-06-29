@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['api.ipfsbrowser.com'],
+    domains: ['api.ipfsbrowser.com', 'gateway.pinata.cloud'],
   },
 }
 

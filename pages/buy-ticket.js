@@ -31,14 +31,14 @@ const BuyTicket = () => {
       if (_buyer === account) {
         const userTicketCategory = ethers.utils.parseBytes32String(_ticketCategory)
         enqueueSnackbar(`You bought a ${userTicketCategory} ticket, Waiting for Ticket Data...`, { variant: 'success' })
-
         // ASK the backend to submit data to IPFS
-        const requestTicketInfo = async() => {
+        const requestTicketInfo = async () => {
           const _response = await axios.get(`${backendUrl}ticket/${account}`)
           const _data = _response.data
           console.log("requestTicketInfo Data: ", _data);
-          checkBought()
-        } 
+          await checkBought()
+          enqueueSnackbar(`Your ticket was uploaded to IPFS!`, { variant: 'success' })
+        }
         requestTicketInfo()
       }
     })
@@ -78,6 +78,7 @@ const BuyTicket = () => {
   const checkBought = async () => {
     const _isBought = await contractRead.hasBoughtTicket(account)
     setIsBought(_isBought)
+    return _isBought
   }
 
   const checkEnoughTicket = (ticketType) => {
