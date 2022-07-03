@@ -1,5 +1,4 @@
-# Smart Contract
+# Demo
 
-https://github.com/NFTTM/NFTicketMP-contracts
-
-https://goerli.etherscan.io/address/0x38e07a39846f535c641486eb2b22d45aad83e25f
+Frontend: https://nfticketing.herokuapp.com/
+Backend: https://nfticket.herokuapp.com/docs/
